@@ -1,0 +1,62 @@
+Josephus Problem Notes
+day_1 medium from microsoft
+
+Problem Statement
+The Josephus problem involves n people standing in a circle. Starting from the first person, every k-th person is removed until only one person remains. The goal is to find the position of the last person remaining.
+
+Solution Steps
+1. Mathematical Formula for Josephus Problem:
+The recurrence relation for the Josephus problem is: J(n,k) = (J(n-1,k) + k) mod n
+- Base case: J(1,k) = 0 (0-based indexing)
+- The result represents the position of the winner in 0-based indexing.
+
+2. Iterative Approach:
+- Start with winner = 0 for n = 1
+- For each subsequent i from 2 to n: winner = (winner + k) mod i
+- After computing for n, convert the result to 1-based indexing by adding 1.
+
+Java Implementation
+
+```java
+public int findTheWinner(int n, int k) {
+    int winner = 0; // Base case: the winner is at index 0
+    for (int i = 2; i <= n; i++) {
+        winner = (winner + k) % i; // Update winner using Josephus recurrence
+    }
+    return winner + 1; // Convert to 1-based indexing
+}
+```
+
+Explanation of Code
+1. Initialization:
+- Start with winner = 0 for the base case when there is only one person.
+
+2. Iterative Update:
+- Use the recurrence formula (winner + k) mod i to update the position of the winner as the circle size increases.
+
+3. Final Adjustment:
+- Convert the result from 0-based indexing to 1-based indexing by adding 1.
+
+Complexity
+- Time Complexity: O(n)
+  - The loop runs n-1 iterations.
+- Space Complexity: O(1)
+  - No extra memory is used.
+
+Example Walkthrough
+1. Input:
+- n = 5, k = 2
+
+2. Iterations:
+- i = 2: winner = (0 + 2) % 2 = 0
+- i = 3: winner = (0 + 2) % 3 = 2
+- i = 4: winner = (2 + 2) % 4 = 0
+- i = 5: winner = (0 + 2) % 5 = 2
+
+3. Output:
+- Convert winner = 2 to 1-based indexing: 2 + 1 = 3
+
+4. Result:
+- The winner is the 3rd person.
+
+This method is efficient, avoids unnecessary simulations, and uses the mathematical recurrence for optimal performance.
