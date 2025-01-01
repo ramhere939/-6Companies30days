@@ -1,42 +1,34 @@
-### Notes for Image Smoother Problem
+Notes for Image Smoother Problem
 Day_1_problem_1
 
-#### Problem Description:
-- Given a 2D matrix `img`, smooth each pixel by replacing its value with the **average of all valid neighboring pixels** (including itself).
-- Handle edge cases like single row/column or boundary pixels carefully.
+Problem Description:
+Given a 2D matrix img, smooth each pixel by replacing its value with the average of all valid neighboring pixels (including itself).
+Handle edge cases like single row/column or boundary pixels carefully.
 
----
+Key Points to Solve:
+1. Neighborhood for a Pixel:
+   The 3x3 grid centered on the pixel.
+   Use directions array: {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 0}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}.
 
-#### Key Points to Solve:
-1. **Neighborhood for a Pixel**:
-   - The 3x3 grid centered on the pixel.
-   - Use **directions array**: `{{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 0}, {0, 1}, {1, -1}, {1, 0}, {1, 1}}`.
+2. Steps:
+   Create a result matrix to avoid overwriting original values during computation.
+   For each pixel (i, j):
+      Traverse its valid neighbors.
+      Calculate the sum of neighbors and their count.
+      Update result[i][j] with the average value (integer division).
 
-2. **Steps**:
-   1. Create a **result matrix** to avoid overwriting original values during computation.
-   2. For each pixel `(i, j)`:
-      - Traverse its valid neighbors.
-      - Calculate the sum of neighbors and their count.
-      - Update `result[i][j]` with the average value (integer division).
+3. Edge Cases:
+   Single row or single column matrix.
+   Boundary pixels.
 
-3. **Edge Cases**:
-   - Single row or single column matrix.
-   - Boundary pixels.
-
----
-
-#### Code Snippet:
-
-```java
+Code Snippet:
 class Solution {
     public int[][] imageSmoother(int[][] img) {
         int n = img.length; // Rows
         int m = img[0].length; // Columns
         int[][] result = new int[n][m];
-
         // Directions for 3x3 neighborhood
         int[][] directions = {{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 0}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
-
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
                 int sum = 0, count = 0;
@@ -53,23 +45,17 @@ class Solution {
         return result;
     }
 }
-```
 
----
+Complexity:
+1. Time Complexity:
+   O(n · m · 9) ≈ O(n · m), where n and m are matrix dimensions.
+   9 is the constant for checking neighbors.
 
-#### Complexity:
-1. **Time Complexity**:
-   - \(O(n \cdot m \cdot 9)\) ≈ \(O(n \cdot m)\), where \(n\) and \(m\) are matrix dimensions.
-   - 9 is the constant for checking neighbors.
+2. Space Complexity:
+   O(n · m): For the result matrix.
 
-2. **Space Complexity**:
-   - \(O(n \cdot m)\): For the result matrix.
-
----
-
-#### Summary for Notes:
-1. Use **direction arrays** to traverse neighbors dynamically.
+Summary:
+1. Use direction arrays to traverse neighbors dynamically.
 2. Handle edge cases (single row, single column, boundaries) with conditional checks.
-3. Always use a **separate result matrix** to avoid modifying the original matrix during computation.
-
+3. Always use a separate result matrix to avoid modifying the original matrix during computation.
 These notes should help you quickly recall the solution and approach!
