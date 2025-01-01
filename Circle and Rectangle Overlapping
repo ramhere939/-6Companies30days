@@ -1,0 +1,92 @@
+Here's the plain text version:
+
+Your implementation is correct and aligns well with the explanation I provided earlier. Here's a breakdown of what your code does:
+
+Key Steps in Your Code
+
+1. Determine the Closest Point:
+   For the x-coordinate:
+      If the circle's center xCenter lies within the rectangle's horizontal bounds [x1,x2], the closest point's x-coordinate is xCenter itself.
+      Otherwise, the closest x-coordinate is either the left edge x1 (if xCenter<x1) or the right edge x2 (if xCenter>x2).
+   Similarly, for the y-coordinate:
+      If yCenter is within [y1,y2], the closest point's y-coordinate is yCenter.
+      Otherwise, it's y1 or y2.
+
+2. Calculate the Distance:
+   Compute the distance between the circle's center and the closest point using the Pythagorean theorem, avoiding the square root for efficiency by working with squared values: distanceSquared = (x - xCenter)^2 + (y - yCenter)^2
+
+3. Check the Radius Condition:
+   If the squared distance is less than or equal to the square of the radius (r^2), then the circle overlaps with the rectangle: distanceSquared <= r^2
+
+Your Code Analysis
+
+Correctness:
+It accurately determines the closest point and performs the radius check. This handles all cases:
+   Circle's center inside the rectangle.
+   Circle overlapping the rectangle.
+   Circle just touching the rectangle.
+   Circle far away from the rectangle.
+
+Efficiency:
+Time Complexity: O(1)
+   The calculations involve simple comparisons and arithmetic operations.
+Space Complexity: O(1)
+   No additional memory is used.
+
+Readability:
+The logic is clean and easy to understand.
+
+Comments for Better Understanding
+Here's your code with comments for clarity:
+
+public boolean checkOverlap(int r, int xCenter, int yCenter, int x1, int y1, int x2, int y2) {
+    // Finding the nearest point on the rectangle to the circle's center
+    int x, y;
+    
+    // Closest x-coordinate
+    if (x1 <= xCenter && xCenter <= x2) 
+        x = xCenter; // xCenter is within the rectangle's horizontal bounds
+    else if (xCenter < x1) 
+        x = x1; // xCenter is to the left of the rectangle
+    else 
+        x = x2; // xCenter is to the right of the rectangle
+
+    // Closest y-coordinate
+    if (y1 <= yCenter && yCenter <= y2) 
+        y = yCenter; // yCenter is within the rectangle's vertical bounds
+    else if (yCenter < y1) 
+        y = y1; // yCenter is below the rectangle
+    else 
+        y = y2; // yCenter is above the rectangle
+
+    // Calculate squared distance between circle's center and closest point
+    int x_distance = x - xCenter;
+    int y_distance = y - yCenter;
+    
+    // Check if the distance is within the circle's radius
+    return (x_distance * x_distance) + (y_distance * y_distance) <= r * r;
+}
+
+Test Cases
+
+Case 1: Circle Center Inside Rectangle
+Input: r = 5, xCenter = 4, yCenter = 4, x1 = 3, y1 = 3, x2 = 7, y2 = 6
+Closest Point: (4,4)
+Distance: 0
+Output: true
+
+Case 2: Circle Just Touching Rectangle
+Input: r = 3, xCenter = 5, yCenter = 8, x1 = 3, y1 = 5, x2 = 7, y2 = 6
+Closest Point: (5,6)
+Distance: 2^2 = 4
+r^2 = 9, so 4 <= 9
+Output: true
+
+Case 3: Circle Far Away from Rectangle
+Input: r = 2, xCenter = 10, yCenter = 10, x1 = 3, y1 = 3, x2 = 7, y2 = 6
+Closest Point: (7,6)
+Distance: (10-7)^2 + (10-6)^2 = 9 + 16 = 25
+r^2 = 4, so 25 > 4
+Output: false
+
+This implementation is robust and handles all edge cases.
