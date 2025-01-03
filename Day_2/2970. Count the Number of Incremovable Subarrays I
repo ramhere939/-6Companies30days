@@ -15,7 +15,88 @@ Difficulty: Medium
   - Each element in `nums` can range from -10,000,000 to 10,000,000.  
 - Edge Cases:  
   - The array contains negative numbers.  
-  - The array has a large size, so an efficient solution is needed.  
+  - The array has a large size, so an efficient solution is needed.  Here are the **plain text notes** for your problem, formatted for readability and easy copying into GitHub.  
+
+---
+
+Incremovable Subarray Count  
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: An integer array `nums` of size `n`.  
+- Output: Return the number of subarrays that can be removed such that the remaining array is strictly increasing.  
+- Constraints:  
+  - The length of `nums` is between 1 and 1000.  
+  - Each element in `nums` can range from 1 to 1000.  
+- Edge Cases:  
+  - The array is already strictly increasing.  
+  - The array consists of all identical elements.  
+  - Removing the entire array still results in a valid increasing sequence (empty case).  
+
+Approach  
+
+1. Initial Thoughts  
+   - A brute-force approach can iterate over all possible subarrays and check if the remaining array is strictly increasing.  
+   - Given the constraints (n ≤ 1000), an O(n³) approach is acceptable.  
+
+2. Optimal Solution  
+   - Use nested loops to consider all subarrays `[i, j]` for removal.  
+   - Check whether the remaining elements form a strictly increasing sequence.  
+   - If valid, increment the answer count.  
+   - This approach runs in O(n³) time, which is feasible given the constraints.  
+
+3. Time & Space Complexity  
+   - Time Complexity: O(n³) due to three nested loops.  
+   - Space Complexity: O(1) since only a few integer variables are used.  
+
+Code Implementation  
+```java
+class Solution {
+    public int incremovableSubarrayCount(int[] nums) {
+        int ans = 0;
+        int n = nums.length;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                boolean ok = true;
+                int lst = -1;
+
+                for (int k = 0; k < n; k++) {
+                    if (k >= i && k <= j) {
+                        continue;
+                    } else {
+                        ok &= (lst < nums[k]);
+                        lst = nums[k];
+                    }
+                }
+
+                ans += ok ? 1 : 0;
+            }
+        }
+        return ans;
+    }
+}
+```
+
+Similar Problems  
+- Remove Subarray to Maximize Sortedness  
+- Find the Longest Increasing Subsequence  
+
+Review Notes  
+- Key Insights  
+  - The problem is solvable with brute force due to the small constraints.  
+  - The condition `lst < nums[k]` ensures the remaining array is strictly increasing.  
+- Common Mistakes  
+  - Not considering the edge case where removing the entire array is valid.  
+  - Incorrectly handling the boolean condition for sequence validation.  
+- Optimization Tips  
+  - If constraints were larger, a more optimized approach would be needed (e.g., binary search or dynamic programming).  
+
+---
+
+This format ensures **clean readability** and **GitHub compatibility**. Let me know if you need further refinements! 🚀
   - All elements in the array are the same.  
 
 **Approach**  
