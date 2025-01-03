@@ -1,0 +1,70 @@
+Here is the problem-solving note in a **plain text format**, without Markdown syntax. You can directly copy and paste it without any special formatting characters.
+
+---
+
+**Ways to Split Array**  
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+**Problem Understanding**  
+- Input: An integer array `nums` of size `n`.  
+- Output: Return the number of ways to split `nums` into two parts such that the sum of the left part is at least as large as the sum of the right part.  
+- Constraints:  
+  - The length of `nums` is between 2 and 100,000.  
+  - Each element in `nums` can range from -10,000,000 to 10,000,000.  
+- Edge Cases:  
+  - The array contains negative numbers.  
+  - The array has a large size, so an efficient solution is needed.  
+  - All elements in the array are the same.  
+
+**Approach**  
+
+1. **Initial Thoughts**  
+   A brute-force approach would be to check every possible split point and compute the sum of both parts. However, this would result in an inefficient O(n²) time complexity.  
+
+2. **Optimal Solution**  
+   - We use prefix sum to efficiently determine valid split points.  
+   - First, compute the total sum of the array.  
+   - Iterate through the array while maintaining a running sum (left sum).  
+   - If at any index `i`, `left sum * 2 ≥ total sum`, increment the count.  
+   - This solution works in O(n) time since we only traverse the array twice.  
+   - The space complexity is O(1) since we use only a few extra variables.  
+
+3. **Time & Space Complexity**  
+   - Time Complexity: O(n)  
+   - Space Complexity: O(1)  
+
+**Code Implementation**  
+```java
+public int waysToSplitArray(int[] nums) {
+    long total = 0, left = 0;
+    for (int num : nums) total += num;
+    
+    int count = 0, n = nums.length;
+    for (int i = 0; i < n - 1; i++) {
+        left += nums[i];
+        if (2 * left >= total) count++;
+    }
+    return count;
+}
+```
+
+**Similar Problems**  
+- Split Array Largest Sum  
+- Partition Array for Maximum Sum  
+
+**Review Notes**  
+- **Key Insights:**  
+  - The problem simplifies to checking prefix sums at each index.  
+  - The condition `left sum ≥ right sum` can be rewritten as `2 * left sum ≥ total sum`, avoiding unnecessary calculations.  
+- **Common Mistakes:**  
+  - Not handling negative numbers correctly.  
+  - Forgetting to use `long` to avoid integer overflow in large cases.  
+- **Optimization Tips:**  
+  - Using a single pass after computing the total sum minimizes unnecessary iterations.  
+  - An alternative approach could use binary search on prefix sums for certain variations of this problem.  
+
+---
+
+This text is formatted for **easy readability** and **plain-text copying** without extra characters. Let me know if you need any further modifications! 🚀
