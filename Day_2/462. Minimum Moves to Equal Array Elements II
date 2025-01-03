@@ -1,0 +1,102 @@
+Here is the **plain text format** for your problem, optimized for readability and GitHub compatibility.  
+
+---
+
+Minimum Moves to Equal Array Elements II  
+Date: 02-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: An integer array `nums` of size `n`.  
+- Output: Return the minimum number of moves required to make all array elements equal. A move consists of incrementing or decrementing an element.  
+- Constraints:  
+  - The length of `nums` is between 1 and 100,000.  
+  - Each element in `nums` can range from -10^9 to 10^9.  
+- Edge Cases:  
+  - The array is already equal.  
+  - Large input sizes, requiring an efficient algorithm.  
+  - The presence of negative numbers.  
+
+Approach  
+
+1. Initial Thoughts  
+   - Sorting and choosing the median as the target value is the optimal approach.  
+   - A brute-force approach checking all possible values would be inefficient.  
+
+2. Optimal Solution  
+   - The median minimizes the total absolute difference.  
+   - Instead of sorting, we use QuickSelect (a variation of QuickSort) to find the median in O(n) time on average.  
+   - Compute the total moves by summing the absolute differences between each element and the median.  
+   - This results in an O(n) time complexity with O(1) extra space.  
+
+3. Time & Space Complexity  
+   - Time Complexity: O(n) on average, O(n²) in the worst case.  
+   - Space Complexity: O(1), since sorting is avoided.  
+
+Code Implementation  
+```java
+public int minMoves2(int[] nums) {
+    int k = nums.length / 2;
+    int count = 0;
+    int median = quickSelect(nums, 0, nums.length - 1, k);
+    for (int num : nums) {
+        count += Math.abs(num - median);
+    }
+    return count;
+}
+
+private int quickSelect(int[] nums, int left, int right, int k) {
+    if (left == right) return nums[left];
+
+    int pivotIndex = partition(nums, left, right);
+    if (pivotIndex == k) {
+        return nums[pivotIndex];
+    } else if (pivotIndex > k) {
+        return quickSelect(nums, left, pivotIndex - 1, k);
+    } else {
+        return quickSelect(nums, pivotIndex + 1, right, k);
+    }
+}
+
+private int partition(int[] nums, int left, int right) {
+    int pivotIndex = left + new Random().nextInt(right - left + 1);
+    int pivot = nums[pivotIndex];
+    swap(nums, pivotIndex, right);
+    int storeIndex = left;
+
+    for (int i = left; i < right; i++) {
+        if (nums[i] < pivot) {
+            swap(nums, storeIndex, i);
+            storeIndex++;
+        }
+    }
+    swap(nums, storeIndex, right);
+    return storeIndex;
+}
+
+private void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+```
+
+Similar Problems  
+- Minimum Moves to Equal Array Elements  
+- Kth Largest Element in an Array  
+
+Review Notes  
+- Key Insights  
+  - The median minimizes the total moves in an absolute difference problem.  
+  - QuickSelect is an efficient alternative to sorting.  
+- Common Mistakes  
+  - Using sorting instead of QuickSelect, leading to O(n log n) complexity.  
+  - Not handling edge cases like single-element arrays.  
+- Optimization Tips  
+  - If sorting is allowed, sort and use `nums[n/2]` instead of QuickSelect.  
+  - Randomized pivot selection improves QuickSelect performance.  
+
+---
+
+This version avoids unnecessary formatting symbols and is **GitHub-friendly**. Let me know if you need changes! 🚀
