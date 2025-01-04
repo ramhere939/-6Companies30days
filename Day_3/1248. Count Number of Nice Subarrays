@@ -1,0 +1,102 @@
+Number of Nice Subarrays  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: An integer array nums of size n, and an integer k.  
+- Output: Return the number of subarrays that contain exactly k odd numbers.  
+- Constraints:  
+  - The length of nums is between 1 and 100,000.  
+  - Each element in nums is between 1 and 10⁵.  
+  - k is between 1 and n.  
+- Edge Cases:  
+  - nums contains all even numbers.  
+  - nums contains all odd numbers.  
+  - k is larger than the total count of odd numbers in nums.  
+
+Approach  
+
+1. Initial Thoughts  
+   - A brute-force approach would check every subarray and count the number of odd numbers, leading to an O(n²) solution.  
+   - A HashMap approach (previous solution) reduces this to O(n) using prefix sums.  
+   - The second approach uses an array (cnt) instead of a HashMap, which optimizes space and improves runtime.  
+
+2. Approach 1: HashMap (Prefix Sum + Frequency Map)  
+   - Maintain a prefix sum of odd numbers encountered so far.  
+   - Use a HashMap (m) to store frequency of prefix sums.  
+   - If odd_count - k exists in the map, it means we found a valid subarray ending at i.  
+   - Update the map to track occurrences of odd_count.  
+
+Time Complexity: O(n) (single pass over nums).  
+Space Complexity: O(n) (HashMap stores prefix sums).  
+
+Code:  
+public int numberOfSubarrays(int[] nums, int k) {  
+    int n = nums.length;  
+    int ans = 0;  
+    Map<Integer, Integer> m = new HashMap<>();  
+    m.put(0, 1);  
+    int odd_count = 0;  
+
+    for (int i = 0; i < n; i++) {  
+        odd_count += nums[i] % 2;  
+        ans += m.getOrDefault(odd_count - k, 0);  
+        m.put(odd_count, m.getOrDefault(odd_count, 0) + 1);  
+    }  
+    return ans;  
+}  
+
+3. Approach 2: Optimized Array-Based Prefix Sum  
+   - Instead of using a HashMap, use an array cnt of size n+1 to store the count of prefix sums.  
+   - cnt[0] = 1 accounts for cases where t == k.  
+   - Traverse nums while maintaining t, the count of odd numbers encountered so far.  
+   - If t - k >= 0, it means we found a valid subarray contributing to the result.  
+   - Update cnt[t] to track occurrences of t.  
+   - This approach maintains O(n) time complexity with O(n) space complexity but is generally faster than the HashMap version.  
+
+Time Complexity: O(n) (single pass over nums).  
+Space Complexity: O(n) (array cnt replaces the HashMap).  
+
+Code:  
+public int numberOfSubarrays(int[] nums, int k) {  
+    int n = nums.length;  
+    int[] cnt = new int[n + 1];  
+    cnt[0] = 1;  
+    int ans = 0, t = 0;  
+
+    for (int v : nums) {  
+        t += v & 1;  
+        if (t - k >= 0) {  
+            ans += cnt[t - k];  
+        }  
+        cnt[t]++;  
+    }  
+    return ans;  
+}  
+
+Comparison of Both Approaches  
+
+HashMap (Prefix Sum + Frequency Map) - Time Complexity: O(n), Space Complexity: O(n), Works well when k is large.  
+Optimized Array-Based Prefix Sum - Time Complexity: O(n), Space Complexity: O(n), Faster in practice due to reduced HashMap overhead.  
+
+Similar Problems  
+- Subarrays with K Different Integers  
+- Count Number of Subarrays with Given Sum  
+
+Review Notes  
+
+Key Insights  
+- The prefix sum technique allows us to efficiently count valid subarrays in O(n) time.  
+- The array-based frequency approach is generally faster than a HashMap due to reduced overhead.  
+
+Common Mistakes  
+- Not initializing cnt[0] = 1, which is crucial for handling cases where t == k.  
+- Forgetting to check t - k >= 0 before accessing cnt[t - k].  
+
+Optimization Tips  
+- The array-based approach is cache-friendly and often outperforms the HashMap approach for large inputs.  
+- If k is large, using a HashMap instead of an array can save space when n is significantly large.  
+
+This format ensures clarity, readability, and GitHub-friendly formatting. Let me know if you need any refinements!
