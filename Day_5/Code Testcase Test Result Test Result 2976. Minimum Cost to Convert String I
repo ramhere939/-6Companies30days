@@ -1,0 +1,136 @@
+Minimum Cost to Convert One String to Another Using Dijkstra’s Algorithm  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Hard  
+
+Problem Understanding  
+
+Input:  
+- source: A string representing the initial state  
+- target: A string representing the desired state  
+- original[]: An array of characters that can be changed  
+- changed[]: An array of corresponding characters to which original[i] can be transformed  
+- cost[]: An array where cost[i] is the cost of converting original[i] to changed[i]  
+
+Output: The minimum cost to convert source to target, or -1 if conversion is impossible  
+
+Constraints:  
+- source.length() == target.length()  
+- source and target consist of lowercase English letters ('a' to 'z')  
+- original.length == changed.length == cost.length  
+
+Approach  
+
+1. Graph Representation (Adjacency Matrix)  
+   - Treat each character ('a' to 'z') as a node in a graph  
+   - Construct an adjacency matrix adj[26][26], initialized with Integer.MAX_VALUE (indicating no direct conversion)  
+   - Fill the adjacency matrix using original, changed, and cost, ensuring that multiple conversion costs between the same characters take the minimum value  
+
+2. Applying Dijkstra’s Algorithm  
+   - For each unique character in source, run Dijkstra’s algorithm to compute the shortest path to all other characters  
+   - Store these distances in matrix[26][26] to avoid recomputation  
+   - Use a priority queue (min-heap) to efficiently extract the next shortest distance  
+
+3. Calculating the Minimum Cost  
+   - For each character in source, check the shortest conversion path to the corresponding character in target  
+   - If no valid conversion exists (dist == Integer.MAX_VALUE), return -1  
+   - Otherwise, sum up the minimum costs and return the total  
+
+Time and Space Complexity  
+
+- Dijkstra’s Algorithm: O(26² log 26) ≈ O(676 log 26) ≈ O(676)  
+- Preprocessing (Graph Construction): O(n)  
+- Final Cost Calculation: O(m)  
+- Overall Complexity: O(n + 676) ≈ O(n) for practical cases  
+- Space Complexity: O(26²) ≈ O(1) (Fixed-size adjacency matrix)  
+
+Code Implementation  
+
+```java
+long[] dijkstra(int S, long adj[][]){
+    long dist[] = new long[26];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[S] = 0;
+    
+    PriorityQueue<long[]> pq = new PriorityQueue<>(Comparator.comparingLong(a -> a[1]));
+    pq.offer(new long[]{S, 0});
+    
+    while(!pq.isEmpty()){
+        long[] element = pq.poll();
+        long node = element[0], distance = element[1];
+        
+        for(int i = 0; i < 26; i++){
+            if(adj[(int)node][i] == Integer.MAX_VALUE) continue;
+            
+            long newDist = distance + adj[(int)node][i]; 
+            if(newDist < dist[i]){
+                dist[i] = newDist;
+                pq.offer(new long[]{i, newDist});
+            }
+        }
+    }
+    return dist;
+}
+
+public long minimumCost(String source, String target, char[] original, char[] changed, int[] cost) {
+    long adj[][] = new long[26][26];
+    for(int i = 0; i < 26; i++) Arrays.fill(adj[i], Integer.MAX_VALUE);
+    
+    int n = original.length;
+    for(int i = 0; i < n; i++){
+        int from = original[i] - 'a';
+        int to = changed[i] - 'a';
+        long conversionCost = cost[i];
+        adj[from][to] = Math.min(adj[from][to], conversionCost);
+    }
+    
+    int m = source.length();
+    long matrix[][] = new long[26][26];
+    HashSet<Integer> uniqueSrc = new HashSet<>();
+    
+    for(int i = 0; i < m; i++){
+        int src = source.charAt(i) - 'a';
+        if(!uniqueSrc.contains(src)){
+            matrix[src] = dijkstra(src, adj);
+            uniqueSrc.add(src);
+        }
+    }
+    
+    long minCost = 0;
+    for(int i = 0; i < m; i++){
+        int src = source.charAt(i) - 'a';
+        int dest = target.charAt(i) - 'a';
+        if(matrix[src][dest] == Integer.MAX_VALUE){
+            return -1;
+        }
+        minCost += matrix[src][dest];
+    }
+    return minCost;
+}
+```
+
+Similar Problems  
+
+- Dijkstra’s Algorithm Variants  
+- Network Delay Time (LeetCode)  
+- Cheapest Flights Within K Stops (LeetCode)  
+- Graph Shortest Path Problems  
+
+Review Notes  
+
+Key Insights  
+- Treat characters as graph nodes and construct an adjacency matrix  
+- Use Dijkstra’s algorithm to find the shortest transformation path efficiently  
+- Precompute shortest paths for unique source characters to avoid redundant calculations  
+
+Common Mistakes  
+- Not initializing the adjacency matrix correctly (all non-existing edges should be Integer.MAX_VALUE)  
+- Forgetting to take the minimum cost when multiple transformations exist between the same characters  
+- Not handling cases where source.length() != target.length()  
+
+Optimization Tips  
+- If the number of unique transformations is small, a Floyd-Warshall approach (O(26³)) can be used  
+- For larger inputs, consider a bidirectional Dijkstra’s algorithm for further speed improvements  
+
+Let me know if you need any refinements
