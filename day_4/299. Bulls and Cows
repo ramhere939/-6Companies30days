@@ -1,0 +1,70 @@
+Bulls and Cows  
+
+Date: 03-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input: Two strings, s (secret number) and g (guess), both of the same length.  
+- Output: Return a hint string formatted as "xAyB" where:  
+  - x is the number of bulls (correct digits in the correct position).  
+  - y is the number of cows (correct digits in the wrong position).  
+- Constraints:  
+  - 1 ≤ s.length = g.length ≤ 1000  
+  - s and g contain only digits (0-9).  
+- Edge Cases:  
+  - s and g are identical.  
+  - No bulls but many cows.  
+  - All digits are the same but in different positions.  
+
+Approach  
+
+1. Counting Bulls and Cows  
+- Iterate through both strings simultaneously.  
+- If characters at the same index match, increment bulls.  
+- If they do not match, track occurrences of each digit in two separate arrays (se for s, gu for g).  
+- After the loop, count cows by summing the minimum occurrences of each digit.  
+
+2. Time and Space Complexity  
+- Time Complexity: O(n), where n is the length of s.  
+- Space Complexity: O(1) since we use two fixed-size arrays of length 10.  
+
+Code Implementation  
+
+public String getHint(String s, String g) {  
+    int bulls = 0, cows = 0;  
+    int se[] = new int[10];  
+    int gu[] = new int[10];  
+
+    for (int i = 0; i < s.length(); i++) {  
+        if (s.charAt(i) == g.charAt(i)) bulls++;  
+        else {  
+            se[s.charAt(i) - '0']++;  
+            gu[g.charAt(i) - '0']++;  
+        }  
+    }  
+
+    for (int i = 0; i < 10; i++) cows += Math.min(se[i], gu[i]);  
+
+    return bulls + "A" + cows + "B";  
+}  
+
+Similar Problems  
+- Find the Minimum Difference in Digits  
+- Letter Matching Game  
+
+Review Notes  
+
+Key Insights  
+- Bulls are counted first to avoid double-counting them as cows.  
+- Using arrays instead of HashMaps improves performance due to the fixed digit range.  
+
+Common Mistakes  
+- Counting bulls inside the cows calculation leads to overcounting.  
+- Forgetting to convert characters to integers when updating arrays.  
+
+Optimization Tips  
+- Use a single pass approach with two integer arrays to keep operations efficient.  
+- StringBuilder usage can improve performance slightly in large cases.  
+
+Let me know if you need refinements.
