@@ -1,0 +1,124 @@
+Find the City With the Smallest Number of Neighbors at a Threshold Distance  
+
+Date: 05-01-2025  
+Platform: LeetCode  
+Difficulty: Medium  
+
+Problem Understanding  
+- Input:  
+  - An integer `n` representing the number of cities.  
+  - A list `edges` where each entry is `[u, v, w]` (a bidirectional edge between cities `u` and `v` with weight `w`).  
+  - An integer `distanceThreshold` representing the maximum allowed distance.  
+- Output: The city with the smallest number of reachable neighbors within the threshold distance. If multiple cities have the same count, return the city with the largest index.  
+- Constraints:  
+  - 2 ≤ n ≤ 100  
+  - 0 ≤ edges.length ≤ n * (n - 1) / 2  
+  - The weight of edges is between 1 and 10⁴.  
+- Edge Cases:  
+  - No edges in the graph.  
+  - All cities are directly connected.  
+  - Some cities are unreachable.  
+
+Approach  
+
+1. **Graph Representation (Adjacency Matrix)**  
+   - Initialize a `n x n` adjacency matrix with `-1` to represent no direct path.  
+   - Set `adj[i][i] = 0` (distance from a node to itself is zero).  
+   - Populate the adjacency matrix using the given edges.  
+
+2. **Floyd-Warshall Algorithm for All-Pairs Shortest Paths**  
+   - Convert `-1` (no direct edge) to `threshold + 1` to differentiate unreachable paths.  
+   - Apply the Floyd-Warshall algorithm to compute the shortest paths between all pairs.  
+   - Restore `-1` for unreachable paths after the computation.  
+
+3. **Finding the Optimal City**  
+   - Iterate over each city and count how many cities are reachable within `distanceThreshold`.  
+   - Track the city with the minimum count, prioritizing larger indices in case of ties.  
+
+Time and Space Complexity  
+- **Floyd-Warshall Algorithm:** O(n³) (three nested loops).  
+- **Finding the City Count:** O(n²) (iterating through the adjacency matrix).  
+- **Overall Complexity:** O(n³), suitable for n ≤ 100.  
+- **Space Complexity:** O(n²) for the adjacency matrix.  
+
+Code Implementation  
+
+```java
+public int findCityCount(int [][]matrix, int n, int src, int threshold){
+    int count = 0;
+    for(int i = 0; i < n; i++){
+        if(matrix[src][i] == -1 || src == i){
+            continue;
+        }
+        if(matrix[src][i] <= threshold){
+            count++;
+        }
+    }
+    return count;
+}
+
+private void floydWarshall(int [][]matrix, int n, int threshold){
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            if(matrix[i][j] == -1) matrix[i][j] = threshold + 1;
+        }
+    }
+    for(int via = 0; via < n; via++){
+        for(int i = 0; i < n; i++){
+            for(int j = 0; j < n; j++){
+                matrix[i][j] = Math.min(matrix[i][j], matrix[i][via] + matrix[via][j]);
+            }
+        }
+    }
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < n; j++){
+            if(matrix[i][j] == threshold + 1) matrix[i][j] = -1;
+        }
+    }
+}
+
+public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+    int[][] adj = new int[n][n];
+    for(int i = 0; i < n; i++){
+        Arrays.fill(adj[i], -1);
+        adj[i][i] = 0;
+    }
+    for(int[] edge : edges){
+        int u = edge[0], v = edge[1], w = edge[2];
+        adj[u][v] = w;
+        adj[v][u] = w;
+    }
+    floydWarshall(adj, n, distanceThreshold);
+    
+    int minCount = Integer.MAX_VALUE, ans = -1;
+    for(int i = 0; i < n; i++){
+        int count = findCityCount(adj, n, i, distanceThreshold);
+        if(count <= minCount){
+            ans = i;
+            minCount = count;
+        }
+    }
+    return ans;
+}
+```
+
+Similar Problems  
+- Shortest Path in a Weighted Graph  
+- Network Delay Time  
+- Dijkstra’s Algorithm  
+
+Review Notes  
+
+Key Insights  
+- Floyd-Warshall is optimal for small `n` (≤ 100).  
+- Prioritizing the largest index in case of ties ensures correct results.  
+
+Common Mistakes  
+- Forgetting to initialize self-distances to `0` in the adjacency matrix.  
+- Not correctly restoring `-1` for unreachable nodes after Floyd-Warshall.  
+
+Optimization Tips  
+- For larger graphs (n > 1000), Dijkstra’s Algorithm (O(n log n)) would be more efficient than Floyd-Warshall.  
+- Use adjacency lists instead of an adjacency matrix if space is a concern.  
+
+Let me know if you need refinements!
