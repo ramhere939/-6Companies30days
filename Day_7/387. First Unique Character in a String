@@ -1,0 +1,64 @@
+🔠 First Unique Character in a String  
+
+📅 Date: [07-1-2025]  
+🖥️ Platform: [LeetCode/GFG]  
+⚡ Difficulty: [Easy]  
+
+🔍 Problem Understanding  
+🎯 Input: A string `s` containing lowercase English letters  
+🎯 Output: Index of the first non-repeating character or `-1` if none exist  
+📏 Constraints: `1 <= s.length <= 10^5`  
+🔄 Edge cases: All characters repeat, single character string, first character is unique  
+
+💡 Approach  
+1️⃣ Initial thoughts  
+   🔹 Use a frequency map to count occurrences  
+   🔹 Traverse again to find the first unique character  
+
+2️⃣ Optimal solution  
+   🔹 Use a 2D array `alpha[26][2]` to store:  
+     ➖ `alpha[i][0]`: Frequency of character `i`  
+     ➖ `alpha[i][1]`: First occurrence index of `i`  
+   🔹 Traverse `s` once to populate `alpha`  
+   🔹 Find the smallest index where frequency is `1`  
+
+3️⃣ Time/Space Complexity  
+   ⏳ Time Complexity: `O(N)`, since we traverse the string twice  
+   💾 Space Complexity: `O(1)`, since `alpha[26][2]` is constant  
+
+📝 Pseudo Code  
+🔹 Initialize `alpha[26][2]` for storing frequency and index  
+🔹 Iterate over the string:  
+   ➖ Update frequency and store first occurrence index  
+🔹 Find the smallest index with frequency 1  
+🔹 Return index or -1 if no unique character exists  
+
+💻 Code  
+```java
+public int firstUniqChar(String s) {
+    int alpha[][] = new int[26][2];
+    int i = 0;
+    for (char ch : s.toCharArray()) {
+        alpha[ch - 'a'][0]++;
+        if (alpha[ch - 'a'][0] == 1)
+            alpha[ch - 'a'][1] = i;
+        i++;
+    }
+    int min = Integer.MAX_VALUE;
+    for (int k = 0; k < 26; k++) {
+        if (alpha[k][0] == 1) {
+            min = Math.min(alpha[k][1], min);
+        }
+    }
+    return min == Integer.MAX_VALUE ? -1 : min;
+}
+```
+
+🔗 Similar Problems  
+🎯 Find First Non-Repeating Character in a Stream  
+🎯 Implement a Character Frequency Counter  
+
+🧐 Review Notes  
+✅ Key insights: Using an array instead of a HashMap improves speed  
+❌ Common mistakes: Forgetting to check if no unique character exists  
+⚡ Optimization tips: Use a single-pass queue-based approach for real-time uniqueness checking
