@@ -1,0 +1,67 @@
+🗻 Longest Mountain in Array  
+
+📅 Date: [07-01-25]  
+🖥️ Platform: [LeetCode/GFG]  
+⚡ Difficulty: [Medium]  
+
+🔍 Problem Understanding  
+🎯 Input: An array `arr[]` of integers  
+🎯 Output: Length of the longest mountain subarray  
+📏 Constraints: `1 <= arr.length <= 10^4`, `0 <= arr[i] <= 10^4`  
+🔄 Edge cases: No valid mountain, all increasing/decreasing, smallest valid mountain  
+
+💡 Approach  
+1️⃣ Initial thoughts  
+   🔹 A mountain is a sequence of increasing elements followed by decreasing elements  
+   🔹 Identify peaks (`arr[i-1] < arr[i] > arr[i+1]`)  
+   🔹 Expand left and right to determine mountain length  
+
+2️⃣ Optimal solution  
+   🔹 Traverse array, detect peaks  
+   🔹 Expand left while `arr[j] > arr[j-1]`  
+   🔹 Expand right while `arr[k] > arr[k+1]`  
+   🔹 Track maximum mountain length  
+
+3️⃣ Time/Space Complexity  
+   ⏳ Time Complexity: `O(N)`, iterating over the array  
+   💾 Space Complexity: `O(1)`, using only integer variables  
+
+📝 Pseudo Code  
+🔹 If `n < 3`, return `0`  
+🔹 Iterate `i` from `1` to `n-1`:  
+   ➖ If `arr[i-1] < arr[i] > arr[i+1]`, it's a peak  
+   ➖ Expand left while `arr[j] > arr[j-1]`  
+   ➖ Expand right while `arr[k] > arr[k+1]`  
+   ➖ Update `max` with the mountain length  
+🔹 Return `max`  
+
+💻 Code  
+```java
+public int longestMountain(int[] arr) {
+    int n = arr.length;
+    if (n < 3) return 0;
+    int max = 0;
+    for (int i = 1; i < n - 1; i++) {
+        if (arr[i - 1] < arr[i] && arr[i] > arr[i + 1]) {
+            int j = i - 1, k = i + 1;
+            while (j > 0 && arr[j] > arr[j - 1]) {
+                j--;
+            }
+            while (k < n - 1 && arr[k] > arr[k + 1]) {
+                k++;
+            }
+            max = Math.max(max, k - j + 1);
+        }
+    }
+    return max;
+}
+```
+
+🔗 Similar Problems  
+🎯 Longest Increasing Subsequence  
+🎯 Find Peak Element  
+
+🧐 Review Notes  
+✅ Key insights: Expanding from peaks reduces unnecessary iterations  
+❌ Common mistakes: Not handling edge cases where no mountain exists  
+⚡ Optimization tips: Two-pass approach with prefix and suffix arrays
