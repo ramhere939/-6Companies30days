@@ -1,0 +1,112 @@
+🔢 **Matrix Chain Multiplication - Optimal Parenthesization**  
+
+📌 **Understanding the Problem**  
+👉 Given an array `p[]` representing matrix dimensions, find the **minimum cost** of multiplying matrices and return the **optimal parenthesization**.  
+
+🛠 **Key Observations**  
+✅ We are multiplying `(p[i-1] x p[i])` sized matrices.  
+✅ **Different parenthesization orders** affect the computation cost.  
+✅ We use **Dynamic Programming (DP)** to **split matrices optimally**.  
+
+🔍 **Approach**  
+🔹 **DP Table (`dp[i][j]`)** stores the minimum multiplication cost from matrix `i` to `j`.  
+🔹 **Path Table (`path[i][j]`)** stores the split point `k` for optimal multiplication order.  
+🔹 **Recursive DFS Traversal** reconstructs the parenthesization order.  
+
+📌 **Steps**  
+1️⃣ **Initialize DP Table**: `dp[i][j] = 0` for single matrices.  
+2️⃣ **Fill DP Table**: Iterate over possible splits and find the minimum multiplication cost.  
+3️⃣ **Use DFS** to reconstruct the optimal order using `path` table.  
+
+📝 **Pseudocode**  
+```
+Function matrixChainOrder(p):
+    n = length of p
+    Initialize dp[n][n] to store minimum multiplication cost
+    Initialize path[n][n] to store optimal split points
+    matrix = 'A'  // Used to track matrix names
+    result = ""
+
+    // Compute DP table
+    for length from 2 to n-1:
+        for i from 1 to n-length:
+            j = i + length - 1
+            dp[i][j] = ∞
+            for k from i to j-1:
+                tempCost = dp[i][k] + dp[k+1][j] + (p[i-1] * p[k] * p[j])
+                if tempCost < dp[i][j]:
+                    dp[i][j] = tempCost
+                    path[i][j] = k  // Store split point
+
+    // Construct parenthesization using DFS
+    Call dfs(1, n-1, path)
+    Return result
+
+Function dfs(i, j, path):
+    If i == j:
+        Append matrix to result
+        matrix++
+        Return
+    Append '(' to result
+    dfs(i, path[i][j], path)   // Left part of split
+    dfs(path[i][j] + 1, j, path) // Right part of split
+    Append ')' to result
+```
+
+⏳ **Time Complexity**: `O(n³)`  
+💾 **Space Complexity**: `O(n²)`  
+
+📝 **Quick Revision Notes**  
+✅ **Key Insight**: DP + Recursive DFS for Parenthesization  
+❌ **Common Mistake**: Forgetting to store split positions in `path[][]`  
+⚡ **Optimization Tip**: Avoid recalculating subproblems using DP  
+
+💡 **Similar Problems**  
+➡️ **Burst Balloons (DP + Partitioning)**  
+➡️ **Palindrome Partitioning (Recursive DP)**  
+
+🚀 **Code Implementation**  
+```java
+class Solution {
+    static char matrix;
+    static String ans;
+    
+    static String matrixChainOrder(int p[]) {
+        int n = p.length;
+        matrix = 'A';
+        ans = "";
+        
+        int[][] dp = new int[n][n];
+        int[][] path = new int[n][n];
+        
+        for (int pair = 2; pair < n; pair++) {
+            for (int i = 1; i <= n - pair; i++) {
+                int j = i + pair - 1;
+                dp[i][j] = Integer.MAX_VALUE;
+                for (int k = i; k < j; k++) {
+                    int temp = dp[i][k] + dp[k+1][j] + p[i-1] * p[k] * p[j];
+                    if (temp < dp[i][j]) {
+                        dp[i][j] = temp;
+                        path[i][j] = k;
+                    }
+                }
+            }
+        }
+        
+        dfs(1, n-1, path);
+        return ans;
+    }
+    
+    static void dfs(int i, int j, int[][] path) {
+        if (i == j) {
+            ans += matrix;
+            matrix++;
+            return;
+        }
+        ans += '(';
+        dfs(i, path[i][j], path);
+        dfs(path[i][j] + 1, j, path);
+        ans += ')';
+    }
+}
+```
