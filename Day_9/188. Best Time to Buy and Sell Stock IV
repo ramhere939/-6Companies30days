@@ -1,0 +1,76 @@
+📌 📈 Stock Trading with at Most `k` Transactions  
+
+📅 🔹 Date: [09-01-25]  
+🖥️ 🔍 Platform: [LeetCode/GFG]  
+⚡ 🎯 Difficulty: [Hard]  
+
+🔍 📝 Problem Understanding  
+➡️ **Input:** Integer `k` (max transactions), array `prices[]` (stock prices)  
+➡️ **Output:** Maximum profit possible with at most `k` transactions  
+
+📏 🔢 Constraints  
+➡️ `1 ≤ k ≤ 100`  
+➡️ `1 ≤ prices.length ≤ 10^5`  
+➡️ Prices are positive integers  
+
+🔄 🛠️ Edge Cases  
+➡️ `prices` is empty or has only one price  
+➡️ `k` is large compared to the number of prices  
+➡️ Prices are always increasing or decreasing  
+
+💡 🔍 Approach  
+🔹 **Dynamic Programming**  
+  🔹 Use a `dp[k+1][n]` table where `dp[i][j]` stores the max profit using `i` transactions up to day `j`  
+  🔹 Initialize `dp` with zero profit for `0` transactions  
+  🔹 For each transaction count (`i`), iterate through each day (`j`)  
+  🔹 Maintain `effectiveBuyPrice`, which is the **minimum price** to buy considering previous transaction profits  
+  🔹 Update `dp[i][j]` as the max of:  
+    🔹 Not selling on day `j` (`dp[i][j-1]`)  
+    🔹 Selling on day `j` (`prices[j] - effectiveBuyPrice`)  
+  🔹 Return `dp[k][n-1]`, which contains the maximum profit possible  
+
+⏳ ⏱️ Time Complexity: **O(k * n)**  
+💾 🏗️ Space Complexity: **O(k * n)**  
+
+📝 🔢 Pseudo Code  
+```plaintext
+initialize dp[k+1][n] to store max profit for up to k transactions  
+if n < 2 return 0  
+for i = 1 to k:  
+    set effectiveBuyPrice to prices[0]  
+    for j = 1 to n:  
+        update dp[i][j] as max of:  
+            - not selling today (dp[i][j-1])  
+            - selling today (prices[j] - effectiveBuyPrice)  
+        update effectiveBuyPrice as min(effectiveBuyPrice, prices[j] - dp[i-1][j])  
+return dp[k][n-1]  
+```
+
+💻 🔡 Code Implementation  
+```java
+public int maxProfit(int k, int[] prices) {
+    int n = prices.length;
+    int [][]dp = new int[k+1][n];
+    if (n < 2) return 0;
+    
+    for (int i = 1; i <= k; i++) {
+        int effectiveBuyPrice = prices[0];
+        for (int j = 1; j < prices.length; j++) {
+            dp[i][j] = Math.max(dp[i][j-1], prices[j] - effectiveBuyPrice);
+            effectiveBuyPrice = Math.min(effectiveBuyPrice, prices[j] - dp[i-1][j]);
+        }
+    }
+    
+    return dp[k][n-1];
+}
+```
+
+🔗 📚 Similar Problems  
+➡️ **Best Time to Buy and Sell Stock (Single Transaction)**  
+➡️ **Best Time to Buy and Sell Stock II (Unlimited Transactions)**  
+➡️ **Best Time to Buy and Sell Stock with Cooldown**  
+
+🧐 🚀 Review Notes  
+✅ **Key Insights:** Track `effectiveBuyPrice` to minimize cost  
+❌ **Common Mistakes:** Forgetting to update `effectiveBuyPrice` correctly  
+⚡ **Optimization Tips:** Can optimize space to `O(n)` using rolling arrays
