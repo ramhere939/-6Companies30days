@@ -1,0 +1,68 @@
+📌 🔢 Maximum of All Subarrays of Size `k`  
+
+📅 🖥️ Platform: [GFG]  
+⚡ 🔍 Difficulty: [Medium]  
+
+🔍 📝 Problem Understanding  
+➡️ **Input:** Array `arr[]`, integer `k` (window size)  
+➡️ **Output:** List of maximum values for each subarray of size `k`  
+
+📏 🔢 Constraints  
+➡️ `1 ≤ k ≤ arr.length ≤ 10^6`  
+➡️ `-10^7 ≤ arr[i] ≤ 10^7`  
+
+🔄 🛠️ Edge Cases  
+➡️ `arr` contains all negative or all positive numbers  
+➡️ `k` equals `1` (output is the same as `arr`)  
+➡️ `k` equals `arr.length` (output is single max value)  
+
+💡 🔍 Approach  
+🔹 **Sliding Window using Deque**  
+  🔹 Use a `Deque` (double-ended queue) to store indices of useful elements  
+  🔹 **Maintain decreasing order** in `Deque`, removing smaller elements  
+  🔹 For each index `i`:  
+    🔹 Remove elements **out of window** (`i-k`)  
+    🔹 Remove elements **smaller than `arr[i]`**  
+    🔹 Add `i` to `Deque`  
+    🔹 Add `arr[dq.getFirst()]` to result when `i >= k-1`  
+
+⏳ ⏱️ Time Complexity: **O(n)**  
+💾 🏗️ Space Complexity: **O(k)**  
+
+📝 🔢 Pseudo Code  
+```plaintext
+initialize Deque and result list  
+for each index i in arr:  
+    remove elements outside window (i-k) from Deque  
+    remove smaller elements from Deque  
+    add index i to Deque  
+    if i >= k-1, add arr[dq.getFirst()] to result  
+return result  
+```
+
+💻 🔡 Code Implementation  
+```java
+public ArrayList<Integer> max_of_subarrays(int arr[], int k) {
+    Deque<Integer> dq = new ArrayDeque<>();
+    ArrayList<Integer> ans = new ArrayList<>();
+    
+    for (int i = 0; i < arr.length; i++) {
+        if (!dq.isEmpty() && dq.getFirst() == i - k) dq.removeFirst();
+        while (!dq.isEmpty() && arr[dq.getLast()] <= arr[i]) dq.removeLast();
+        dq.add(i);
+        if (i >= k - 1) ans.add(arr[dq.getFirst()]);
+    }
+    
+    return ans;
+}
+```
+
+🔗 📚 Similar Problems  
+➡️ **Sliding Window Maximum**  
+➡️ **Largest Rectangle in Histogram**  
+➡️ **Stock Span Problem**  
+
+🧐 🚀 Review Notes  
+✅ **Key Insights:** Maintain a decreasing order in `Deque`  
+❌ **Common Mistakes:** Forgetting to remove out-of-window elements  
+⚡ **Optimization Tips:** Use a `Deque` for `O(1)` max retrieval
