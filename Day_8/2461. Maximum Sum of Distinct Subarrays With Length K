@@ -1,0 +1,63 @@
+📌 ✨ Excel Column Title Conversion ✨  
+
+📅 📌 Date: [08-01-25]  
+🖥️ 🔍 Platform: [LeetCode/GFG]  
+⚡ 🎯 Difficulty: [Easy]  
+
+🔍 📝 Problem Understanding  
+➡️ 🎯 **Input:** Integer `colNum` representing an Excel column number  
+➡️ 🎯 **Output:** Corresponding column title as a string  
+
+📏 🔢 Constraints  
+➡️ `colNum > 0`  
+
+🔄 🛠️ Edge Cases  
+➡️ Smallest column number (1 → "A")  
+➡️ Large column number (e.g., `702 → "ZZ"`)  
+
+💡 🔍 Approach  
+🔹 **Using Division and Modulus**  
+  🔹 Columns follow a **base-26** system  
+  🔹 Subtract `1` from `colNum` to make it **0-based**  
+  🔹 Find the remainder when dividing by `26`, convert to a character (`A-Z`)  
+  🔹 Append to result and divide `colNum` by `26` for next iteration  
+  🔹 Reverse the result to get the correct column title  
+
+⏳ ⏱️ Time Complexity: **O(log colNum)**  
+💾 🏗️ Space Complexity: **O(1)**  
+
+📝 🔢 Pseudo Code  
+```plaintext
+initialize empty string builder
+while colNum > 0:
+    decrement colNum by 1 (convert to 0-based)
+    find remainder when divided by 26
+    convert remainder to corresponding character ('A' + remainder)
+    append character to string
+    update colNum by dividing by 26
+reverse the string and return
+```
+
+💻 🔡 Code Implementation  
+```java
+public String convertToTitle(int colNum) {
+    StringBuilder str = new StringBuilder();
+    while (colNum > 0) {
+        colNum--;  
+        int rem = colNum % 26;
+        char ch = (char) ('A' + rem);
+        str.append(ch);
+        colNum /= 26;
+    }
+    return str.reverse().toString();
+}
+```
+
+🔗 📚 Similar Problems  
+➡️ **Excel Sheet Column Number**  
+➡️ **Base Conversion Problems**  
+
+🧐 🚀 Review Notes  
+✅ **Key Insights:** Treat column as base-26 number system  
+❌ **Common Mistakes:** Forgetting to decrement `colNum` before modulo  
+⚡ **Optimization Tips:** Use `StringBuilder` to efficiently build the string
