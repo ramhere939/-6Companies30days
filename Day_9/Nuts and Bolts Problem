@@ -1,0 +1,86 @@
+🔩⚙️ **Bolts and Nuts Problem**  
+
+🔹 **Problem Statement**  
+Given two arrays, `nuts[]` and `bolts[]`, where each element represents a unique size, match nuts to their corresponding bolts using only **comparisons of type less than, greater than, or equal to**.  
+
+🔹 **Key Constraints**  
+- No direct comparison between two nuts or two bolts.  
+- Must use **partitioning-based approach** similar to **quick sort**.  
+
+🔹 **Approach**  
+🐢 **Brute Force:** Compare each nut with every bolt → **O(n²)** (inefficient).  
+⚡ **Optimal Approach (Quick Sort Partitioning):**  
+1️⃣ Pick a **pivot nut** and partition bolts around it.  
+2️⃣ Use the **matched bolt** as a pivot to partition nuts.  
+3️⃣ Recursively apply this process for smaller subarrays.  
+
+🔹 **Pseudocode**  
+```
+Function matchNutsAndBolts(nuts, bolts, low, high):
+    If low < high:
+        pivotIndex = partition(nuts, bolts[high], low, high) // Partition nuts using bolt pivot
+        partition(bolts, nuts[pivotIndex], low, high) // Partition bolts using nut pivot
+        matchNutsAndBolts(nuts, bolts, low, pivotIndex - 1) // Recursively solve left part
+        matchNutsAndBolts(nuts, bolts, pivotIndex + 1, high) // Recursively solve right part
+
+Function partition(arr, pivot, low, high):
+    i = low
+    for j from low to high:
+        If arr[j] < pivot:
+            swap(arr[i], arr[j])
+            i++
+        Else if arr[j] == pivot:
+            swap(arr[j], arr[high]) // Move pivot to end
+            j--
+    swap(arr[i], arr[high]) // Place pivot in correct position
+    Return i
+```
+
+🔹 **Time Complexity:** `O(n log n)`  
+🔹 **Space Complexity:** `O(1)`  
+
+🔹 **Quick Revision Notes**  
+✅ Uses **partitioning like QuickSort**  
+✅ Matches nuts and bolts efficiently in `O(n log n)`  
+❌ **Common Mistake:** Directly comparing nuts and bolts instead of using pivots  
+
+🔹 **Similar Problems**  
+➡️ **QuickSort Algorithm**  
+➡️ **Dutch National Flag Problem**  
+
+🚀 **Code Implementation**  
+```java
+class Solution {
+    void matchPairs(char nuts[], char bolts[], int n) {
+        quickSort(nuts, bolts, 0, n - 1);
+    }
+
+    void quickSort(char[] nuts, char[] bolts, int low, int high) {
+        if (low < high) {
+            int pivot = partition(nuts, bolts[high], low, high);
+            partition(bolts, nuts[pivot], low, high);
+            quickSort(nuts, bolts, low, pivot - 1);
+            quickSort(nuts, bolts, pivot + 1, high);
+        }
+    }
+
+    int partition(char[] arr, char pivot, int low, int high) {
+        int i = low;
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot) {
+                swap(arr, i++, j);
+            } else if (arr[j] == pivot) {
+                swap(arr, j--, high);
+            }
+        }
+        swap(arr, i, high);
+        return i;
+    }
+
+    void swap(char[] arr, int i, int j) {
+        char temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+```
