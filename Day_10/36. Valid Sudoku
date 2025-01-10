@@ -1,0 +1,60 @@
+📝 **Notes for GitHub**  
+
+🔹 **Problem Statement**  
+Validate a 9×9 Sudoku board. Each row, column, and 3×3 box should not contain duplicate numbers (1-9). Empty cells are represented by `'.'`.  
+
+🔹 **Concept**  
+- A valid Sudoku must satisfy three conditions:  
+  ✅ No duplicate numbers in **any row**.  
+  ✅ No duplicate numbers in **any column**.  
+  ✅ No duplicate numbers in **any 3×3 box**.  
+
+🔹 **Approach 1 (Brute Force)**  
+✔ Check all 9 rows using an **ArrayList** to track numbers.  
+✔ Check all 9 columns using an **ArrayList**.  
+✔ Check all 9 **3×3 boxes** using an **ArrayList**.  
+❌ **Inefficient** due to `O(n²)` lookups in lists.  
+
+🔹 **Approach 2 (Optimized using HashSet)**  
+✔ Use a **single HashSet** to track all constraints.  
+✔ Generate unique **keys** for:  
+  ✅ Rows → `"num_row"`  
+  ✅ Columns → `"num_col"`  
+  ✅ Boxes → `"num_boxRow_boxCol"`  
+✔ If any key is **repeated**, return `false`.  
+✔ Otherwise, store them in the set and continue checking.  
+
+🔹 **Pseudocode**  
+```
+Create an empty HashSet ans
+Loop through each row in the board:
+    Loop through each column in the board:
+        If cell is '.', continue
+        Generate rowKey, colKey, boxKey
+        If any key exists in ans → return false
+        Else, add all keys to ans
+Return true
+```
+
+🔹 **Complexity**  
+✔ **Time Complexity:** `O(81) ≈ O(1)` (Fixed 9×9 board).  
+✔ **Space Complexity:** `O(81) ≈ O(1)` (Stores row, col, and box keys).  
+
+🔹 **Optimized Code**  
+```java
+public boolean isValidSudoku(char[][] board) {
+    Set<String> ans = new HashSet<>();
+    for (int row = 0; row < 9; row++) {
+        for (int col = 0; col < 9; col++) {
+            if (board[row][col] == '.') continue;
+            
+            String rows = board[row][col] + "_row_" + row;
+            String cols = board[row][col] + "_col_" + col;
+            String boxs = board[row][col] + "_box_" + row / 3 + "_" + col / 3;
+            
+            if (!ans.add(rows) || !ans.add(cols) || !ans.add(boxs)) return false;
+        }
+    }
+    return true;
+}
+```
