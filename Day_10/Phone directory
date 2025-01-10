@@ -1,0 +1,60 @@
+📞 Phone Directory Problem  
+
+📌 Given a list of contacts and a search string, find all contacts that match each prefix of the search string.  
+
+🔹 **Approach**  
+✅ Use a **TreeSet** to store unique contacts in sorted order.  
+✅ Iterate through each prefix of the search string.  
+✅ Check which contacts start with the current prefix.  
+✅ If no contact matches, add `"0"` to indicate no results.  
+
+🔹 **Pseudocode**  
+```
+Function displayContacts(n, contact[], s):
+    Create TreeSet 'uniqueContacts' from contact[]
+    Create list 'ans'
+    For i from 1 to length of s:
+        substring = s[0:i]
+        Create empty list 'matchedContacts'
+        For each name in uniqueContacts:
+            If name starts with substring:
+                Add name to matchedContacts
+        If matchedContacts is empty:
+            Add "0"
+        Add matchedContacts to ans
+    Return ans
+```
+
+🔹 **Time Complexity**  
+**O(n log n) + O(m * k)** (sorting + searching for each prefix)  
+
+🔹 **Code Implementation**  
+```java
+static ArrayList<ArrayList<String>> displayContacts(int n, String contact[], String s) {
+    ArrayList<ArrayList<String>> ans = new ArrayList<>();
+    TreeSet<String> uniqueContacts = new TreeSet<>(Arrays.asList(contact));
+    
+    for (int i = 1; i <= s.length(); i++) {
+        String str = s.substring(0, i);
+        ArrayList<String> ans1 = new ArrayList<>();
+        for (String name : uniqueContacts) {
+            if (name.startsWith(str)) {
+                ans1.add(name);
+            }
+        }
+        if (ans1.isEmpty()) ans1.add("0");
+        ans.add(ans1);
+    }
+    return ans;
+}
+```
+
+🔹 **Quick Revision Notes**  
+✅ **Uses TreeSet for automatic sorting**  
+✅ **Iterates through each prefix efficiently**  
+✅ **Handles no matches with `"0"`**  
+❌ **Common Mistake:** Not removing duplicates before searching  
+
+🔹 **Similar Problems**  
+➡️ **Autocomplete System**  
+➡️ **Trie-based Prefix Search**
