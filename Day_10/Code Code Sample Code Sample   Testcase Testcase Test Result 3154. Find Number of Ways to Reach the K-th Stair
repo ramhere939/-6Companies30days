@@ -1,0 +1,83 @@
+📝 **Notes for GitHub**  
+
+🔹 **Problem Statement**  
+Given a stair number `k`, start from stair `1` and reach `k` using jumps of powers of 2 (`2^0, 2^1, 2^2,...`). You can also move back by `1` step **only once** throughout the journey. Find the number of ways to reach `k`.  
+
+🔹 **Concept**  
+Uses recursion and memoization to count the ways to reach stair `k` with jumps of powers of 2.  
+
+🔹 **Approach**  
+✅ Precompute powers of 2 up to `2^31`.  
+✅ Use a recursive function `solve(i, jump, canGoBack, k)`:  
+   - `i` is the current stair.  
+   - `jump` is the index for the power of 2.  
+   - `canGoBack` ensures only one backward move.  
+   - `k` is the target stair.  
+✅ Use memoization to store results in a hashmap.  
+✅ Base case: If `i == k`, count this as one valid way.  
+✅ Two choices: Move forward using `2^jump` or move backward (only once).  
+
+🔹 **Pseudocode**  
+```
+Initialize power[] array to store powers of 2
+Define map for memoization
+
+Function solve(i, jump, canGoBack, k):
+    If i > k+1 → Return 0
+    Create key = i + "_" + jump + "_" + canGoBack
+    If key exists in map → Return stored result
+
+    Initialize ways = 0
+    If i == k → Increment ways
+
+    If canGoBack is true:
+        ways += solve(i - 1, jump, false, k)
+
+    If jump < 32:
+        ways += solve(i + power[jump], jump + 1, true, k)
+
+    Store ways in map and return
+
+Function waysToReachStair(k):
+    Compute power[i] = 2^i for i in range 0 to 31
+    Clear memoization map
+    Return solve(1, 0, true, k)
+```
+
+🔹 **Complexity**  
+🔹 **Time Complexity:** `O(k log k)` due to memoization reducing redundant calculations.  
+🔹 **Space Complexity:** `O(k log k)` for recursion depth and hashmap storage.  
+
+🔹 **Common Mistakes**  
+❌ Forgetting to clear the memoization map for each test case.  
+❌ Allowing multiple backward moves instead of just one.  
+
+🔹 **Similar Problems**  
+➡️ Reach a number using jumps of powers of 2.  
+➡️ Minimum steps to reach a target using constrained moves.  
+
+🔹 **Code Implementation**  
+```java
+long power[] = new long[32];
+Map<String, Integer> mp = new HashMap<>();
+
+int solve(int i, int jump, boolean canGoBack, int k) {
+    if (i > k + 1) return 0;
+    int ways = 0;
+    String key = i + "_" + jump + "_" + canGoBack;
+    if (mp.containsKey(key)) return mp.get(key);
+
+    if (i == k) ways++;
+    if (canGoBack) ways += solve(i - 1, jump, false, k);
+    if (jump < 32) ways += solve(i + (int) power[jump], jump + 1, true, k);
+    
+    mp.put(key, ways);
+    return ways;
+}
+
+public int waysToReachStair(int k) {
+    for (int i = 0; i < 32; i++) power[i] = (long) Math.pow(2, i);
+    mp.clear();
+    return solve(1, 0, true, k);
+}
+```
