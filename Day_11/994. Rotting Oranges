@@ -1,0 +1,74 @@
+🟠 **Problem**  
+Given a grid where:  
+✔ `0` represents an empty cell  
+✔ `1` represents a fresh orange  
+✔ `2` represents a rotten orange  
+Find the **minimum time** required for all fresh oranges to rot. If it's **impossible**, return `-1`.  
+
+🔵 **Approach**  
+✔ Use **BFS (Breadth-First Search)** since rot spreads level by level.  
+✔ Push all initially **rotten oranges** into a queue.  
+✔ Keep track of **fresh oranges count**.  
+✔ Perform **multi-source BFS** to rot adjacent fresh oranges.  
+✔ Count the **time levels** required.  
+
+⚡ **Pseudocode**  
+```
+1. Initialize a queue for BFS and mark all initially rotten oranges.
+2. Count the total number of fresh oranges.
+3. Use BFS to spread the rot:
+   - Process each rotten orange at the current level.
+   - Convert adjacent fresh oranges to rotten.
+   - Push them into the queue and decrement fresh count.
+   - Increase time if any fresh orange rotted.
+4. If no fresh oranges remain, return time; otherwise, return -1.
+```
+
+🟢 **Complexity**  
+✔ **Time Complexity:** `O(N*M)`, visiting each cell once.  
+✔ **Space Complexity:** `O(N*M)`, worst case when all oranges are rotten.  
+
+🔴 **Optimized Code**  
+```java
+public int orangesRotting(int[][] grid) {
+    int n = grid.length, m = grid[0].length;
+    Queue<int[]> q = new LinkedList<>();
+    boolean[][] visited = new boolean[n][m];
+    int fresh = 0;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            if (grid[i][j] == 2) {
+                q.add(new int[]{i, j});
+                visited[i][j] = true;
+            } else if (grid[i][j] == 1) fresh++;
+        }
+    }
+
+    if (fresh == 0) return 0;
+    int level = 0;
+    int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+
+    while (!q.isEmpty()) {
+        boolean rotten = false;
+        int size = q.size();
+        while (size-- > 0) {
+            int[] curr = q.poll();
+            for (int[] d : dir) {
+                int r = curr[0] + d[0], c = curr[1] + d[1];
+                if (r >= 0 && c >= 0 && r < n && c < m && !visited[r][c]) {
+                    if (grid[r][c] == 1) {
+                        q.add(new int[]{r, c});
+                        visited[r][c] = true;
+                        fresh--;
+                        rotten = true;
+                    }
+                }
+            }
+        }
+        if (rotten) level++;
+    }
+
+    return fresh == 0 ? level : -1;
+}
+```
